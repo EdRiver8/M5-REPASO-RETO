@@ -1,5 +1,5 @@
-DELETE FROM prestamo;
-DELETE FROM cliente;
+DELETE FROM prestamos;
+DELETE FROM clientes;
 
 INSERT INTO cliente (nombre, email, telefono, direccion) VALUES
 ('Goku', 'goku@dbz.com', '12345678', 'Kame House'),
@@ -16,23 +16,23 @@ INSERT INTO cliente (nombre, email, telefono, direccion) VALUES
 DO $$
 BEGIN
     FOR i IN 1..50 LOOP
-        INSERT INTO prestamo (monto, interes, duracion_meses, estado, cliente_id)
-        VALUES (random() * 10000, random() * 10, random() * 12, 'Pendiente', (SELECT id FROM cliente ORDER BY random() LIMIT 1));
+        INSERT INTO prestamos (monto, interes, duracion_meses, estado, cliente_id)
+        VALUES (random() * 10000, random() * 10, random() * 12, 'Pendiente', (SELECT id FROM clientes ORDER BY random() LIMIT 1));
     END LOOP;
 END $$;
 
 DO $$
 BEGIN
     FOR i IN 1..15 LOOP
-        INSERT INTO prestamo (monto, interes, duracion_meses, estado, cliente_id)
-        VALUES (random() * 10000, random() * 10, random() * 12, 'Aprobado', (SELECT id FROM cliente ORDER BY random() LIMIT 1));
+        INSERT INTO prestamos (monto, interes, duracion_meses, estado, cliente_id)
+        VALUES (random() * 10000, random() * 10, random() * 12, 'Aprobado', (SELECT id FROM clientes ORDER BY random() LIMIT 1));
     END LOOP;
 END $$;
 
 DO $$
 BEGIN
     FOR i IN 1..25 LOOP
-        INSERT INTO prestamo (monto, interes, duracion_meses, estado, cliente_id)
-        VALUES (random() * 10000, random() * 10, random() * 12, 'Rechazado', (SELECT id FROM cliente ORDER BY random() LIMIT 1));
+        INSERT INTO prestamos (monto, interes, duracion_meses, estado, cliente_id)
+        VALUES (random() * 10000, random() * 10, random() * 12, 'Rechazado', (SELECT id FROM clientes ORDER BY random() LIMIT 1));
     END LOOP;
 END $$;
