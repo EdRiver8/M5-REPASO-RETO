@@ -1,3 +1,6 @@
+DROP TABLE IF EXISTS prestamos;
+DROP TABLE IF EXISTS clientes;
+
 CREATE TABLE clientes (
     id SERIAL PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
@@ -12,5 +15,5 @@ CREATE TABLE prestamos (
     interes DECIMAL(5, 2) NOT NULL,
     duracion_meses INT NOT NULL,
     estado VARCHAR(20) NOT NULL,
-    cliente_id INT REFERENCES cliente(id)
+    cliente_id INT REFERENCES clientes(id)
 );

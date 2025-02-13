@@ -1,12 +1,12 @@
 package co.com.coban.entity;
 
-//import jakarta.persistence.*;
+import jakarta.persistence.*;
 
-//@Entity
-//@Table(name = "clientes")
+@Entity
+@Table(name = "clientes")
 public class Cliente {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String nombre;
     private String email;
