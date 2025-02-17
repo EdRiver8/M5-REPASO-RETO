@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 public class PrestamoDTO {
     private Long id;
@@ -25,10 +24,6 @@ public class PrestamoDTO {
     @NotNull(message = "El estado es obligatorio")
     private String estado;
 
-    @NotNull(message = "La fecha de solicitud es obligatoria")
-    private LocalDateTime fechaSolicitud = LocalDateTime.now();
-
-    private LocalDateTime fechaActualizacion = LocalDateTime.now();
 
     public PrestamoDTO() { }
 
@@ -80,21 +75,6 @@ public class PrestamoDTO {
         this.estado = estado;
     }
 
-    public LocalDateTime getFechaSolicitud() {
-        return fechaSolicitud;
-    }
-
-    public void setFechaSolicitud(LocalDateTime fechaSolicitud) {
-        this.fechaSolicitud = fechaSolicitud;
-    }
-
-    public LocalDateTime getFechaActualizacion() {
-        return fechaActualizacion;
-    }
-
-    public void setFechaActualizacion(LocalDateTime fechaActualizacion) {
-        this.fechaActualizacion = fechaActualizacion;
-    }
 
     @Override
     public String toString() {
@@ -104,8 +84,6 @@ public class PrestamoDTO {
                 ", interes=" + interes +
                 ", duracionMeses=" + duracionMeses +
                 ", estado='" + estado + '\'' +
-                ", fechaCreacion=" + fechaSolicitud +
-                ", fechaActualizacion=" + fechaActualizacion +
                 " }";
     }
 }

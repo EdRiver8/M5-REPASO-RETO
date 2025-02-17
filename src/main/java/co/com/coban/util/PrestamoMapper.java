@@ -11,8 +11,6 @@ public class PrestamoMapper {
         prestamoDTO.setInteres(prestamo.getInteres());
         prestamoDTO.setDuracionMeses(prestamo.getDuracionMeses());
         prestamoDTO.setEstado(prestamo.getEstado());
-        prestamoDTO.setFechaSolicitud(prestamo.getFechaSolicitud());
-        prestamoDTO.setFechaActualizacion(prestamo.getFechaActualizacion());
         return prestamoDTO;
     }
 
@@ -23,8 +21,6 @@ public class PrestamoMapper {
         prestamo.setInteres(prestamoDTO.getInteres());
         prestamo.setDuracionMeses(prestamoDTO.getDuracionMeses());
         prestamo.setEstado(prestamoDTO.getEstado());
-        prestamo.setFechaSolicitud(prestamoDTO.getFechaSolicitud());
-        prestamo.setFechaActualizacion(prestamoDTO.getFechaActualizacion());
         return prestamo;
     }
 }

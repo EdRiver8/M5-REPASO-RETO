@@ -1,7 +1,11 @@
 package co.com.coban.dto;
 
+import co.com.coban.entity.Prestamo;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ClienteDTO {
     @NotNull(message = "El id es obligatorio")
@@ -15,6 +19,7 @@ public class ClienteDTO {
     private String telefono;
     @NotNull(message = "La dirección es obligatoria")
     private String direccion;
+    private List<PrestamoDTO> prestamos = new ArrayList<>();
 
     public ClienteDTO() {
     }
@@ -65,6 +70,14 @@ public class ClienteDTO {
     public void setDireccion(String direccion) {
         this.direccion = direccion;
     }
+    public List<PrestamoDTO> getPrestamos() {
+        return prestamos;
+    }
+
+    public void setPrestamos(List<PrestamoDTO> prestamos) {
+        this.prestamos = prestamos;
+    }
+
 
     @Override
     public String toString() {

@@ -1,9 +1,9 @@
 package co.com.coban.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "prestamos")
@@ -24,16 +24,10 @@ public class Prestamo {
     @Column(nullable = false, length = 20)
     private String estado;
 
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime fechaSolicitud = LocalDateTime.now();
-
-    @Column(nullable = false)
-    private LocalDateTime fechaActualizacion = LocalDateTime.now();
-
-    @PreUpdate
-    public void preUpdate() {
-        this.fechaActualizacion = LocalDateTime.now();
-    }
+    @ManyToOne
+    @JoinColumn(name = "cliente_id", nullable = false)
+    @JsonBackReference
+    private Cliente cliente;
 
     public Prestamo() { }
 
@@ -59,12 +53,6 @@ public class Prestamo {
     public String getEstado() { return estado; }
     public void setEstado(String estado) { this.estado = estado; }
 
-    public LocalDateTime getFechaSolicitud() { return fechaSolicitud; }
-    public void setFechaSolicitud(LocalDateTime fechaSolicitud) { this.fechaSolicitud = fechaSolicitud; }
-
-    public LocalDateTime getFechaActualizacion() { return fechaActualizacion; }
-    public void setFechaActualizacion(LocalDateTime fechaActualizacion) { this.fechaActualizacion = fechaActualizacion; }
-
     @Override
     public String toString() {
         return "Prestamo { " +
@@ -73,8 +61,6 @@ public class Prestamo {
                 ", interes=" + interes +
                 ", duracionMeses=" + duracionMeses +
                 ", estado='" + estado + '\'' +
-                ", fechaCreacion=" + fechaSolicitud +
-                ", fechaActualizacion=" + fechaActualizacion +
                 " }";
     }
 }

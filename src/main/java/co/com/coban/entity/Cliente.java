@@ -1,6 +1,10 @@
 package co.com.coban.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "clientes")
@@ -12,6 +16,10 @@ public class Cliente {
     private String email;
     private String telefono;
     private String direccion;
+
+    @OneToMany(mappedBy = "cliente")
+    @JsonManagedReference
+    private List<Prestamo> prestamos = new ArrayList<>();
 
     public Cliente() {
     }
@@ -61,6 +69,13 @@ public class Cliente {
 
     public void setDireccion(String direccion) {
         this.direccion = direccion;
+    }
+    public void setPrestamos(List<Prestamo> prestamos) {
+        this.prestamos = prestamos;
+    }
+
+    public List<Prestamo> getPrestamos() {
+        return prestamos;
     }
 
     @Override
