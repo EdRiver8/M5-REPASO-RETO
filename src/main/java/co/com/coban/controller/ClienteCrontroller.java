@@ -23,29 +23,44 @@ public class ClienteCrontroller {
 //        this.cliente = cliente;
 //    }
 
-    @GetMapping("/saludo")
+    @GetMapping("/hi")
     public String saludo() {
         return "Hola mundo";
     }
 
-
-    // mostrar un cliente quemado para pruebas
     @GetMapping("/id")
     public ClienteDTO getCliente() {
         return new ClienteDTO("Juan", "juan@mail.com", "1234567890", "Calle 123");
     }
 
-    @PostMapping("/crear")
+    @PostMapping("/creat")
     public ClienteDTO crearCliente(@Valid @RequestBody ClienteDTO clienteDTO) {
         Cliente cliente = ClienteMapper.toCliente(clienteDTO);
         cliente = clienteRepository.save(cliente);
         return ClienteMapper.toClienteDTO(cliente);
     }
 
-    // mostrar todos los clientes
-//    @GetMapping("/all")
-//    public ClienteDTO[] getAllClientes() {
-//
-//    }
+    @GetMapping("/all")
+    public ClienteDTO[] getAllClientes() {
+        return clienteRepository.findAll().stream().map(ClienteMapper::toClienteDTO).toArray(ClienteDTO[]::new);
+    }
+
+    @GetMapping("/{id}")
+    public ClienteDTO getClienteById(@PathVariable Integer id) {
+        return ClienteMapper.toClienteDTO(clienteRepository.findById(id).orElse(null));
+    }
+
+    @PutMapping("/{id}")
+    public ClienteDTO updateCliente(@PathVariable Integer id, @Valid @RequestBody ClienteDTO clienteDTO) {
+        Cliente cliente = ClienteMapper.toCliente(clienteDTO);
+        cliente.setId(id);
+        cliente = clienteRepository.save(cliente);
+        return ClienteMapper.toClienteDTO(cliente);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteCliente(@PathVariable Integer id) {
+        clienteRepository.deleteById(id);
+    }
 
 }
