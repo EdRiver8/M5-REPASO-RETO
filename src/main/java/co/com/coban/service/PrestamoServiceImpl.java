@@ -38,7 +38,7 @@ public class PrestamoServiceImpl implements IPrestamoService {
             return responsePrestamoNoEncontrado();
         }
 
-        return responseCorrecta(true, "Estado del préstamo consultado con éxito", validarPrestamo(idPrestamo), 200);
+        return responsePrestamoExitoso(true, "Estado del préstamo consultado con éxito", validarPrestamo(idPrestamo), 200);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class PrestamoServiceImpl implements IPrestamoService {
         }
 
         if (validarPrestamo(prestamoDTO.getId()) != null) {
-            return responseCorrecta(false, "El préstamo ya existe", null, 400);
+            return responsePrestamoExitoso(false, "El préstamo ya existe", null, 400);
         }
 
         HashMap<String, Object> prestamoSimulado = new HashMap<>();
@@ -62,7 +62,7 @@ public class PrestamoServiceImpl implements IPrestamoService {
         prestamoSimulado.put("totalInteres", (cuota * 12) - prestamoDTO.getMonto().doubleValue());
         prestamoSimulado.put("prestamo", PrestamoMapper.toPrestamoDTO(prestamo));
 
-        return responseCorrecta(true, "Préstamo solicitado con éxito", prestamoSimulado, 200);
+        return responsePrestamoExitoso(true, "Préstamo solicitado con éxito", prestamoSimulado, 200);
     }
 
     @Override
@@ -79,7 +79,7 @@ public class PrestamoServiceImpl implements IPrestamoService {
         prestamo.setEstado("APROBADO");
         prestamoRepository.save(prestamo);
 
-        return responseCorrecta(true, "Préstamo aprobado con éxito", PrestamoMapper.toPrestamoDTO(prestamo), 200);
+        return responsePrestamoExitoso(true, "Préstamo aprobado con éxito", PrestamoMapper.toPrestamoDTO(prestamo), 200);
     }
 
     @Override
@@ -91,7 +91,7 @@ public class PrestamoServiceImpl implements IPrestamoService {
         prestamoSimulado.put("totalPagar", cuota * duracionMeses);
         prestamoSimulado.put("totalInteres", (cuota * duracionMeses) - valor);
 
-        return responseCorrecta(true, "Préstamo simulado con éxito", prestamoSimulado, 200);
+        return responsePrestamoExitoso(true, "Préstamo simulado con éxito", prestamoSimulado, 200);
     }
 
     public Double calcularCuota(BigDecimal valor, Double tasaInteres, Integer cuotas) {
@@ -110,14 +110,14 @@ public class PrestamoServiceImpl implements IPrestamoService {
     }
 
     public PrestamoResponseDTO responseClienteNoEncontrado() {
-        return responseCorrecta(false, "Cliente no encontrado", null, 404);
+        return responsePrestamoExitoso(false, "Cliente no encontrado", null, 404);
     }
 
     public PrestamoResponseDTO responsePrestamoNoEncontrado() {
-        return responseCorrecta(false, "Préstamo no encontrado", null, 404);
+        return responsePrestamoExitoso(false, "Préstamo no encontrado", null, 404);
     }
 
-    public PrestamoResponseDTO responseCorrecta(boolean success, String message, Object data, int statusCode) {
+    public PrestamoResponseDTO responsePrestamoExitoso(boolean success, String message, Object data, int statusCode) {
         PrestamoResponseDTO response = new PrestamoResponseDTO();
         response.setSuccess(success);
         response.setMessage(message);

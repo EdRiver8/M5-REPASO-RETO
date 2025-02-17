@@ -21,9 +21,9 @@ public class PrestamoDTO {
     @Positive(message = "La duración en meses debe ser un valor positivo")
     private Integer duracionMeses;
 
-    @NotNull(message = "El estado es obligatorio")
     private String estado;
 
+    @NotNull(message = "El id del cliente es obligatorio")
     private Integer idCliente;
 
 
