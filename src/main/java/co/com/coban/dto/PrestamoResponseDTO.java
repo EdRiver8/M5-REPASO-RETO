@@ -4,8 +4,7 @@ public class PrestamoResponseDTO {
     private boolean success;
     private String message;
     private Object data;
-
-    // Getters and setters
+    private int statusCode;
 
     public boolean isSuccess() {
         return success;
@@ -29,5 +28,13 @@ public class PrestamoResponseDTO {
 
     public void setData(Object data) {
         this.data = data;
+    }
+
+    public int getStatusCode() {
+        return statusCode;
+    }
+
+    public void setStatusCode(int statusCode) {
+        this.statusCode = statusCode;
     }
 }

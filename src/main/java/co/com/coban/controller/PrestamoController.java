@@ -25,13 +25,13 @@ public class PrestamoController {
 
     @GetMapping("/id")
     public String getPrestamo() {
-        return new PrestamoDTO(1L, new BigDecimal(100000), new BigDecimal(0.05), 12, "ACTIVO", 1L).toString();
+        return new PrestamoDTO(1L, new BigDecimal(100000), new BigDecimal(0.05), 12, "ACTIVO", 1).toString();
     }
 
-    @PostMapping("/create")
-    public PrestamoDTO createPrestamo(@Valid @RequestBody PrestamoDTO prestamoDTO) {
-        return PrestamoMapper.toPrestamoDTO(prestamoRepository.save(PrestamoMapper.toPrestamo(prestamoDTO)));
-    }
+//    @PostMapping("/create")
+//    public PrestamoDTO createPrestamo(@Valid @RequestBody PrestamoDTO prestamoDTO) {
+//        return PrestamoMapper.toPrestamoDTO(prestamoRepository.save(PrestamoMapper.toPrestamo(prestamoDTO)));
+//    }
 
     @GetMapping("/all")
     public PrestamoDTO[] getAllPrestamos() {
@@ -43,11 +43,11 @@ public class PrestamoController {
         return PrestamoMapper.toPrestamoDTO(Objects.requireNonNull(prestamoRepository.findById(id).orElse(null)));
     }
 
-    @PutMapping("/{id}")
-    public PrestamoDTO updatePrestamo(@PathVariable Long id, @Valid @RequestBody PrestamoDTO prestamoDTO) {
-        prestamoDTO.setId(id);
-        return PrestamoMapper.toPrestamoDTO(prestamoRepository.save(PrestamoMapper.toPrestamo(prestamoDTO)));
-    }
+//    @PutMapping("/{id}")
+//    public PrestamoDTO updatePrestamo(@PathVariable Long id, @Valid @RequestBody PrestamoDTO prestamoDTO) {
+//        prestamoDTO.setId(id);
+//        return PrestamoMapper.toPrestamoDTO(prestamoRepository.save(PrestamoMapper.toPrestamo(prestamoDTO)));
+//    }
 
     @DeleteMapping("/{id}")
     public void deletePrestamo(@PathVariable Long id) {

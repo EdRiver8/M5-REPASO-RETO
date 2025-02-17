@@ -27,7 +27,7 @@ public class Prestamo {
     @ManyToOne
     @JoinColumn(name = "cliente_id", nullable = false)
     @JsonBackReference
-    private Cliente cliente;
+    private Cliente clientId;
 
     public Prestamo() { }
 
@@ -52,6 +52,8 @@ public class Prestamo {
 
     public String getEstado() { return estado; }
     public void setEstado(String estado) { this.estado = estado; }
+    public Cliente getClienteId() { return clientId; }
+    public void setClienteId(Cliente cliente) { this.clientId = cliente; }
 
     @Override
     public String toString() {

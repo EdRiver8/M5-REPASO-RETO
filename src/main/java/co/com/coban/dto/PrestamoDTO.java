@@ -24,15 +24,18 @@ public class PrestamoDTO {
     @NotNull(message = "El estado es obligatorio")
     private String estado;
 
+    private Integer idCliente;
+
 
     public PrestamoDTO() { }
 
-    public PrestamoDTO(Long id, BigDecimal monto, BigDecimal interes, Integer duracionMeses, String estado, Long idCliente) {
+    public PrestamoDTO(Long id, BigDecimal monto, BigDecimal interes, Integer duracionMeses, String estado, Integer idCliente) {
         this.id = id;
         this.monto = monto;
         this.interes = interes;
         this.duracionMeses = duracionMeses;
         this.estado = estado;
+        this.idCliente = idCliente;
     }
 
     public Long getId() {
@@ -73,6 +76,14 @@ public class PrestamoDTO {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public Integer getIdCliente() {
+        return idCliente;
+    }
+
+    public void setIdCliente(Integer idCliente) {
+        this.idCliente = idCliente;
     }
 
 

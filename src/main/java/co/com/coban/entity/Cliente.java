@@ -17,7 +17,7 @@ public class Cliente {
     private String telefono;
     private String direccion;
 
-    @OneToMany(mappedBy = "cliente")
+    @OneToMany(mappedBy = "clientId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Prestamo> prestamos = new ArrayList<>();
 
@@ -29,6 +29,9 @@ public class Cliente {
         this.email = email;
         this.telefono = telefono;
         this.direccion = direccion;
+    }
+
+    public Cliente(Integer idCliente) {
     }
 
     public Integer getId() {
@@ -73,7 +76,6 @@ public class Cliente {
     public void setPrestamos(List<Prestamo> prestamos) {
         this.prestamos = prestamos;
     }
-
     public List<Prestamo> getPrestamos() {
         return prestamos;
     }
