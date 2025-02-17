@@ -1,11 +1,13 @@
 package co.com.coban.service;
 
+import co.com.coban.dto.ClienteDTO;
 import co.com.coban.dto.PrestamoDTO;
 import co.com.coban.dto.PrestamoResponseDTO;
 import co.com.coban.entity.Cliente;
 import co.com.coban.entity.Prestamo;
 import co.com.coban.repository.ClienteRepository;
 import co.com.coban.repository.PrestamoRepository;
+import co.com.coban.util.ClienteMapper;
 import co.com.coban.util.PrestamoMapper;
 import org.springframework.stereotype.Service;
 
@@ -27,119 +29,100 @@ public class PrestamoServiceImpl implements IPrestamoService {
 
     @Override
     public PrestamoResponseDTO consultarEstadoPrestamo(Long idPrestamo, Integer idCliente) {
-        PrestamoResponseDTO response = new PrestamoResponseDTO();
 
-        Optional<Cliente> clienteOpt = clienteRepository.findById(idCliente);
-        if (clienteOpt.isEmpty()) {
-
-            response.setSuccess(false);
-            response.setMessage("Cliente no encontrado");
-            response.setData(null);
-            response.setStatusCode(404);
-            return response;
-
+        if (validarCliente(idCliente) == null) {
+            return responseClienteNoEncontrado();
         }
 
-        Optional<Prestamo> prestamoOpt = prestamoRepository.findById(idPrestamo);
-        if (prestamoOpt.isEmpty()) {
-
-            response.setSuccess(false);
-            response.setMessage("Préstamo no encontrado");
-            response.setData(null);
-            response.setStatusCode(404);
-            return response;
-
+        if (validarPrestamo(idPrestamo) == null) {
+            return responsePrestamoNoEncontrado();
         }
 
-        response.setSuccess(true);
-        response.setMessage("Estado del préstamo consultado con éxito");
-        response.setData(PrestamoMapper.toPrestamoDTO(prestamoOpt.get()));
-        response.setStatusCode(200);
-        return response;
+        return responseCorrecta(true, "Estado del préstamo consultado con éxito", validarPrestamo(idPrestamo), 200);
     }
 
     @Override
     public PrestamoResponseDTO solicitarPrestamo(Integer idCliente, PrestamoDTO prestamoDTO) {
-        PrestamoResponseDTO response = new PrestamoResponseDTO();
-
-        Optional<Cliente> clienteOpt = clienteRepository.findById(idCliente);
-        if (clienteOpt.isEmpty()) {
-
-            response.setSuccess(false);
-            response.setMessage("Cliente no encontrado");
-            response.setData(null);
-            response.setStatusCode(404);
-            return response;
-
+        if (validarCliente(idCliente) == null) {
+            return responseClienteNoEncontrado();
         }
 
-        Prestamo prestamo = PrestamoMapper.toPrestamo(prestamoDTO, clienteOpt.get());
+        if (validarPrestamo(prestamoDTO.getId()) != null) {
+            return responseCorrecta(false, "El préstamo ya existe", null, 400);
+        }
+
+        HashMap<String, Object> prestamoSimulado = new HashMap<>();
+
+        Prestamo prestamo = PrestamoMapper.toPrestamo(prestamoDTO, ClienteMapper.toCliente(validarCliente(idCliente)));
         prestamoRepository.save(prestamo);
         // Calculo de la cuota del prestamo
         Double cuota = calcularCuota(prestamoDTO.getMonto(), 0.1, 12);
-        response.setSuccess(true);
-        response.setMessage("Préstamo solicitado con éxito");
-        response.setData(cuota);
-        response.setStatusCode(200);
-        return response;
+        prestamoSimulado.put("cuota", cuota);
+        prestamoSimulado.put("totalPagar", cuota * 12);
+        prestamoSimulado.put("totalInteres", (cuota * 12) - prestamoDTO.getMonto().doubleValue());
+        prestamoSimulado.put("prestamo", PrestamoMapper.toPrestamoDTO(prestamo));
+
+        return responseCorrecta(true, "Préstamo solicitado con éxito", prestamoSimulado, 200);
     }
 
     @Override
     public PrestamoResponseDTO aprobarPrestamo(Integer idCliente, Long idPrestamo) {
-        PrestamoResponseDTO response = new PrestamoResponseDTO();
-
-        Optional<Cliente> clienteOpt = clienteRepository.findById(idCliente);
-        if (clienteOpt.isEmpty()) {
-
-            response.setSuccess(false);
-            response.setMessage("Cliente no encontrado");
-            response.setData(null);
-            response.setStatusCode(404);
-            return response;
-
+        if (validarCliente(idCliente) == null) {
+            return responseClienteNoEncontrado();
         }
 
-        Optional<Prestamo> prestamoOpt = prestamoRepository.findById(idPrestamo);
-        if (prestamoOpt.isEmpty()) {
-
-            response.setSuccess(false);
-            response.setMessage("Préstamo no encontrado");
-            response.setData(null);
-            response.setStatusCode(404);
-            return response;
-
+        if (validarPrestamo(idPrestamo) == null) {
+            return responsePrestamoNoEncontrado();
         }
 
-        Prestamo prestamo = prestamoOpt.get();
+        Prestamo prestamo = PrestamoMapper.toPrestamo(validarPrestamo(idPrestamo), ClienteMapper.toCliente(validarCliente(idCliente)));
         prestamo.setEstado("APROBADO");
         prestamoRepository.save(prestamo);
 
-        response.setSuccess(true);
-        response.setMessage("Préstamo aprobado con éxito");
-        response.setData(PrestamoMapper.toPrestamoDTO(prestamo));
-        response.setStatusCode(200);
-        return response;
+        return responseCorrecta(true, "Préstamo aprobado con éxito", PrestamoMapper.toPrestamoDTO(prestamo), 200);
     }
 
     @Override
     public PrestamoResponseDTO simularPrestamo(Double valor, Double interes, Integer duracionMeses) {
-        PrestamoResponseDTO response = new PrestamoResponseDTO();
         HashMap<String, Object> prestamoSimulado = new HashMap<>();
 
         Double cuota = calcularCuota(BigDecimal.valueOf(valor), interes, duracionMeses);
         prestamoSimulado.put("cuota", cuota);
         prestamoSimulado.put("totalPagar", cuota * duracionMeses);
         prestamoSimulado.put("totalInteres", (cuota * duracionMeses) - valor);
-        response.setData(prestamoSimulado);
 
-        response.setSuccess(true);
-        response.setMessage("Préstamo simulado con éxito");
-        response.setStatusCode(200);
-        return response;
+        return responseCorrecta(true, "Préstamo simulado con éxito", prestamoSimulado, 200);
     }
 
     public Double calcularCuota(BigDecimal valor, Double tasaInteres, Integer cuotas) {
         Double cuota = valor.doubleValue() * (tasaInteres * Math.pow(1 + tasaInteres, cuotas)) / (Math.pow(1 + tasaInteres, cuotas) - 1);
         return cuota;
+    }
+
+    public ClienteDTO validarCliente(Integer idCliente) {
+        Optional<Cliente> clienteOpt = clienteRepository.findById(idCliente);
+        return ClienteMapper.toClienteDTO(clienteOpt.get());
+    }
+
+    public PrestamoDTO validarPrestamo(Long idPrestamo) {
+        Optional<Prestamo> prestamoOpt = prestamoRepository.findById(idPrestamo);
+        return PrestamoMapper.toPrestamoDTO(prestamoOpt.get());
+    }
+
+    public PrestamoResponseDTO responseClienteNoEncontrado() {
+        return responseCorrecta(false, "Cliente no encontrado", null, 404);
+    }
+
+    public PrestamoResponseDTO responsePrestamoNoEncontrado() {
+        return responseCorrecta(false, "Préstamo no encontrado", null, 404);
+    }
+
+    public PrestamoResponseDTO responseCorrecta(boolean success, String message, Object data, int statusCode) {
+        PrestamoResponseDTO response = new PrestamoResponseDTO();
+        response.setSuccess(success);
+        response.setMessage(message);
+        response.setData(data);
+        response.setStatusCode(statusCode);
+        return response;
     }
 }
